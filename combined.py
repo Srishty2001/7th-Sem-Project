@@ -510,7 +510,19 @@ camera_matrix = np.array(
 
 
 
-os.remove("models/data.csv")
+f = open("models/data.csv", "w")
+f.truncate()
+f.close()
+
+if os.path.exists("models/image/image1.png"):
+    os.remove("models/image/image1.png")
+
+if os.path.exists("models/image/image2.png"):
+    os.remove("models/image/image2.png")
+
+if os.path.exists("models/image/image3.png"):
+    os.remove("models/image/image3.png")
+
 
 counter = 0
 counter_frame = 0
