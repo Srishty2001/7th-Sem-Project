@@ -8,6 +8,10 @@ Created on Fri Jul 31 03:00:36 2020
 import cv2
 import numpy as np
 import math
+import datetime
+import tensorflow as tf
+from tensorflow.keras.regularizers import l2
+import csv
 from face_detector import get_face_detector, find_faces
 from face_landmarks import get_landmark_model, detect_marks
 
@@ -155,6 +159,7 @@ frame_counter = 0
 
 while True:
     ret, img = cap.read()
+    image_saved = img
     if ret == True:
         faces = find_faces(img, face_model)
         for face in faces:
@@ -211,19 +216,34 @@ while True:
             #     cv2.putText(img, 'Head up', (30, 30), font, 2, (255, 255, 128), 3)
              
             if ang2 >= 48:
-
                 frame_counter += 1
-                if(frame_counter >= 50):
+                if frame_counter >= 50:
                     cv2.putText(img, 'Head right', (90, 30), font, 2, (255, 255, 128), 3)
-                    print('Head right')
+                    print('Head Right')
+                    tf.keras.utils.save_img("./models/image/image2.png", image_saved)
+                    head = [
+                        ['Head Right', './models/image/image2.png', datetime.datetime.now()]
+                    ]
+                    file = open('models/data.csv', 'a', newline='')
+                    writer = csv.writer(file)
+                    writer.writerow(head)
+                    file.close()
+                    frame_counter = 0
             elif ang2 <= -48:
                 frame_counter += 1
-                if(ang2 >= -48):
-                    frame_counter = 0
-                if(frame_counter >= 100):
+                if frame_counter >= 100:
                     cv2.putText(img, 'Head left', (90, 30), font, 2, (255, 255, 128), 3)
-                    print('Head left')
-            elif(ang2 <= 48 and ang2 >= -48):
+                    print('Head Left')
+                    tf.keras.utils.save_img("./models/image/image2.png", image_saved)
+                    head = [
+                        ['Head Left', './models/image/image2.png', datetime.datetime.now()]
+                    ]
+                    file = open('models/data.csv', 'a', newline='')
+                    writer = csv.writer(file)
+                    writer.writerow(head)
+                    file.close()
+                    frame_counter = 0
+            elif(ang2 <= 30 and ang2 >= -30):
                 frame_counter = 0
 
             
