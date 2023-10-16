@@ -125,17 +125,19 @@ def common_member(a, b):
     b_set = set(b)
 
     # check length
-    if len(a_set.intersection(b_set)) > 0:
-        return(a_set.intersection(b_set))
-    else:
-        return([])
+    return(b_set - a_set)
+    # if len(a_set.intersection(b_set)) > 0:
+    #     return(a_set.intersection(b_set))
+    # else:
+    #     return([])
 
 comm = common_member(filtered_questions, filtered_sentence)
 print('Number of common elements:', len(comm))
 
-file = open('models/audio.csv','a',newline='')
-writer = csv.writer(file)
-writer.writerow(comm)
-file.close()
+for word in comm:
+    file = open('models/audio.csv','a',newline='')
+    writer = csv.writer(file)
+    writer.writerow(word)
+    file.close()
 
 print(comm)
