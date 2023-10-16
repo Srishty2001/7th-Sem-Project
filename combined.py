@@ -515,6 +515,7 @@ os.remove("models/data.csv")
 counter = 0
 counter_frame = 0
 frame_counter = 0
+mouth_counter = 0
 
 
 while(True):
@@ -560,9 +561,21 @@ while(True & counter <= 3):
             if d_inner[i] + 0.5 < shape[p2][1] - shape[p1][1]:
                 cnt_inner += 1
         if cnt_outer > 2 and cnt_inner > 2:
-            print('Mouth open')
             cv2.putText(image, 'Mouth open', (30, 30), font,
                         1, (0, 255, 255), 2)
+            mouth_counter += 1
+            if mouth_counter == 70:
+                print('Mouth open')
+                tf.keras.utils.save_img("./models/image/image3.png", image_saved)
+                head = [
+                    ['Talking', './models/image/image3.png', datetime.datetime.now()]
+                ]
+                file = open('models/data.csv', 'a', newline='')
+                writer = csv.writer(file)
+                writer.writerow(head)
+                file.close()
+                mouth_counter = 0
+
         # show the output image with the face detections + facial landmarks
     # cv2.imshow("Output", image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -625,19 +638,34 @@ while(True & counter <= 3):
         #     cv2.putText(img, 'Head up', (30, 30), font, 2, (255, 255, 128), 3)
 
         if ang2 >= 48:
-
             frame_counter += 1
-            if (frame_counter >= 50):
-                cv2.putText(image, 'Head right', (90, 30), font, 2, (255, 255, 128), 3)
-                print('Head right')
+            if frame_counter >= 50:
+                cv2.putText(img, 'Head right', (90, 30), font, 2, (255, 255, 128), 3)
+                print('Head Right')
+                tf.keras.utils.save_img("./models/image/image2.png", image_saved)
+                head = [
+                    ['Head Right', './models/image/image2.png', datetime.datetime.now()]
+                ]
+                file = open('models/data.csv', 'a', newline='')
+                writer = csv.writer(file)
+                writer.writerow(head)
+                file.close()
+                frame_counter = 0
         elif ang2 <= -48:
             frame_counter += 1
-            if (ang2 >= -48):
+            if frame_counter >= 100:
+                cv2.putText(img, 'Head left', (90, 30), font, 2, (255, 255, 128), 3)
+                print('Head Left')
+                tf.keras.utils.save_img("./models/image/image2.png", image_saved)
+                head = [
+                    ['Head Left', './models/image/image2.png', datetime.datetime.now()]
+                ]
+                file = open('models/data.csv', 'a', newline='')
+                writer = csv.writer(file)
+                writer.writerow(head)
+                file.close()
                 frame_counter = 0
-            if (frame_counter >= 100):
-                cv2.putText(image, 'Head left', (90, 30), font, 2, (255, 255, 128), 3)
-                print('Head left')
-        elif (ang2 <= 48 and ang2 >= -48):
+        elif (ang2 <= 30 and ang2 >= -30):
             frame_counter = 0
 
         # cv2.putText(img, str(ang1), tuple(p1), font, 2, (128, 255, 255), 3)
